@@ -9,7 +9,7 @@ var polygon = null;
 function initMap() {
   // Constructor creates a new map - only center and zoom are required.
   map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 40.7413549, lng: -73.9980244},
+    center: {lat: 47.652042, lng: -122.3646713},
     zoom: 13,
     mapTypeControl: false
   });
@@ -17,12 +17,14 @@ function initMap() {
   // These are the real estate listings that will be shown to the user.
   // Normally we'd have these in a database instead.
   var locations = [
-    {title: 'Park Ave Penthouse', location: {lat: 40.7713024, lng: -73.9632393}},
-    {title: 'Chelsea Loft', location: {lat: 40.7444883, lng: -73.9949465}},
-    {title: 'Union Square Open Floor Plan', location: {lat: 40.7347062, lng: -73.9895759}},
-    {title: 'East Village Hip Studio', location: {lat: 40.7281777, lng: -73.984377}},
-    {title: 'TriBeCa Artsy Bachelor Pad', location: {lat: 40.7195264, lng: -74.0089934}},
-    {title: 'Chinatown Homey Space', location: {lat: 40.7180628, lng: -73.9961237}}
+    {title: 'Big Mario\'s Pizza', location: {lat: 47.6601293, lng: -122.3655865}},
+    {title: 'Frēlard Pizza Company', location: {lat: 47.6537991, lng: -122.3597635}},
+    {title: 'Chinapie', location: {lat: 47.6523581, lng: -122.356624}},
+    {title: 'Via Tribunali', location: {lat: 47.6588171, lng: -122.3500846}},
+    {title: 'Domino\'s Pizza', location: {lat: 47.6612894, lng: -122.3306091}},
+    {title: 'Pagliacci Pizza', location: {lat: 47.6539202, lng: -122.3437461}},
+    {title: 'Zeeks Pizza', location: {lat: 47.648321, lng: -122.3559744}},
+    {title: 'Ballroom', location: {lat: 47.6516998, lng: -122.3532554}}
   ];
 
   var largeInfowindow = new google.maps.InfoWindow();
