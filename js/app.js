@@ -14,17 +14,27 @@ function initMap() {
     mapTypeControl: false
   });
 
-  // These are the real estate listings that will be shown to the user.
+  // https://api.yelp.com/oauth2/token
+  // client_id: nkAiQEV6rXonD1gIUTXhdQ
+  // client_secret: 6dtZFXhBVhVrJ1utJZwwz5KZ1ytLeRy3qHhj4OsUV91sX9O5mxULUAcJpBovUUC5
+  // grant_type: client_credentials
+  // => { access_token: blahblah }
+
+  // https://api.yelp.com/v3/businesses/north-india-restaurant-san-francisco
+  // Bearer Mb84WblpHpm47Sa2Vwh5fqS6GlrYz69ZTKEhxrtOuQRdNwLGFgRen1Fa4pq8hS5tr9GKTpLSwns9ONYqzpqnnxNAmZ4MIhlbG-gBA7EI-j50FmzKTJP08timIr4EWnYx
+  // => { image_url, display_phone, rating }
+
+  // These are the pizza locations that will be shown to the user.
   // Normally we'd have these in a database instead.
   var locations = [
-    {title: 'Big Mario\'s Pizza', location: {lat: 47.6601293, lng: -122.3655865}},
-    {title: 'Frēlard Pizza Company', location: {lat: 47.6537991, lng: -122.3597635}},
-    {title: 'Chinapie', location: {lat: 47.6523581, lng: -122.356624}},
-    {title: 'Via Tribunali', location: {lat: 47.6588171, lng: -122.3500846}},
-    {title: 'Domino\'s Pizza', location: {lat: 47.6612894, lng: -122.3306091}},
-    {title: 'Pagliacci Pizza', location: {lat: 47.6539202, lng: -122.3437461}},
-    {title: 'Zeeks Pizza', location: {lat: 47.648321, lng: -122.3559744}},
-    {title: 'Ballroom', location: {lat: 47.6516998, lng: -122.3532554}}
+    {title: 'Big Mario\'s Pizza', location: {lat: 47.6601293, lng: -122.3655865}, yelpId: 'big-marios-pizza-seattle-6'},
+    {title: 'Frēlard Pizza Company', location: {lat: 47.6537991, lng: -122.3597635}, yelpId: 'frelard-pizza-company-seattle'},
+    {title: 'Chinapie', location: {lat: 47.6523581, lng: -122.356624}, yelpId: 'chinapie-seattle-3'},
+    {title: 'Via Tribunali', location: {lat: 47.6588171, lng: -122.3500846}, yelpId: 'via-tribunali-seattle-6'},
+    {title: 'Domino\'s Pizza', location: {lat: 47.6612894, lng: -122.3306091}, yelpId: 'dominos-pizza-seattle-20'},
+    {title: 'Pagliacci Pizza', location: {lat: 47.6539202, lng: -122.3437461}, yelpId: 'pagliacci-pizza-seattle-3'},
+    {title: 'Zeeks Pizza', location: {lat: 47.648321, lng: -122.3559744}, yelpId: 'zeeks-pizza-seattle'},
+    {title: 'Ballroom', location: {lat: 47.6516998, lng: -122.3532554}, yelpId: 'the-ballroom-seattle'}
   ];
 
   var largeInfowindow = new google.maps.InfoWindow();
