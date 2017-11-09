@@ -31,7 +31,7 @@ function initMap() {
     {title: 'Frēlard Pizza Company', location: {lat: 47.6537991, lng: -122.3597635}, yelpId: 'frelard-pizza-company-seattle'},
     {title: 'Chinapie', location: {lat: 47.6523581, lng: -122.356624}, yelpId: 'chinapie-seattle-3'},
     {title: 'Via Tribunali', location: {lat: 47.6588171, lng: -122.3500846}, yelpId: 'via-tribunali-seattle-6'},
-    {title: 'Domino\'s Pizza', location: {lat: 47.6612894, lng: -122.3306091}, yelpId: 'dominos-pizza-seattle-20'},
+    {title: 'Ballard Pizza Company', location: {lat: 47.6612894, lng: -122.3306091}, yelpId: 'ballard-pizza-company-seattle'},
     {title: 'Pagliacci Pizza', location: {lat: 47.6539202, lng: -122.3437461}, yelpId: 'pagliacci-pizza-seattle-3'},
     {title: 'Zeeks Pizza', location: {lat: 47.648321, lng: -122.3559744}, yelpId: 'zeeks-pizza-seattle'},
     {title: 'Ballroom', location: {lat: 47.6516998, lng: -122.3532554}, yelpId: 'the-ballroom-seattle'}
