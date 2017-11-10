@@ -48,13 +48,26 @@ hr {
   width: 340px;
 }
 
-#pano {
+.locations ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.title {
+  text-align: center;
+  margin: 0.5em 0;
+  font-weight: bold;
+}
+
+.image {
   width: 200px;
   height: 200px;
 }
 
 .text {
+  width: 200px;
   font-size: 12px;
+  margin-bottom: 0.5em;
 }
 
 #filter-text {
