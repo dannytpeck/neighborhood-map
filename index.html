@@ -20,7 +20,7 @@
 
         <div class="locations" data-bind="foreach: locations">
           <ul>
-            <li data-bind="text: title"></li>
+            <li data-bind="text: title, click: $root.handleClick"></li>
           </ul>
         </div>
 
