@@ -7,22 +7,32 @@
   </head>
   <body>
     <div class="container">
+
       <div class="options-box">
-        <h1>Find Pizza!</h1>
+        <h1>Find Nightlife!</h1>
+
         <div>
-          <input id="show-listings" type="button" value="Show Listings">
-          <input id="hide-listings" type="button" value="Hide Listings">
+          <input id="filter-text" type="text" placeholder="Enter text and hit the Filter button" data-bind="event: { keyup: filterLocations }">
+          <input id="filter-button" type="button" value="Filter" data-bind="click: filterLocations">
         </div>
+
         <hr>
-        <div>
-          <input id="zoom-to-area-text" type="text" placeholder="Enter your favorite area!">
-          <input id="zoom-to-area" type="button" value="Zoom">
+
+        <div class="locations" data-bind="foreach: locations">
+          <ul>
+            <li data-bind="text: title"></li>
+          </ul>
         </div>
+
       </div>
+
       <div id="map"></div>
+
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing&key=AIzaSyCQrY4cxZFSshSuk2cK3ZZFvBg5_0n_vhM&v=3"></script>
     <script src="js/app.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing&key=AIzaSyCQrY4cxZFSshSuk2cK3ZZFvBg5_0n_vhM&v=3&callback=initMap"></script>
   </body>
 </html>
