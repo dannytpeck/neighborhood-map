@@ -10,17 +10,40 @@ var initialLocations = [
   {title: 'Bin On The Lake', location: {lat: 47.6569991, lng: -122.2074092}, foursquareId: '4ba41c13f964a5207c8238e3'}
 ];
 
-var Joint = function(data) {
+var Locale = function(data) {
   this.title = ko.observable(data.title);
   this.location = ko.observable(data.location);
-  this.yelpId = ko.observable(data.yelpId);
+  this.foursquareId = ko.observable(data.foursquareId);
 };
 
 var ViewModel = function() {
   var self = this;
 
+  // Array to store markers
+  var markers = [];
+  var largeInfowindow = new google.maps.InfoWindow();
+
   this.locations = ko.observableArray([]);
 
+  // Loops through the markers and filters them based on user search
+  this.filterMarkers = function() {
+    var searchText = document.querySelector('#filter-text').value.toLowerCase();
+    var filtered = markers.filter(function(marker) {
+      return marker.title.toLowerCase().includes(searchText);
+    });
+
+    // Clear all markers from the map
+    markers.forEach(function(marker) {
+      marker.setMap(null);
+    });
+
+    // Display markers based on filter
+    filtered.forEach(function(marker) {
+      marker.setMap(map);
+    });
+  };
+
+  // Filter locations based on user search
   this.filterLocations = function() {
     var searchText = document.querySelector('#filter-text').value.toLowerCase();
 
@@ -30,37 +53,52 @@ var ViewModel = function() {
     // Cycle through initial Locations and only add ones that match the search Text
     initialLocations.forEach(function(location) {
       if (location.title.toLowerCase().includes(searchText)) {
-        self.locations.push(new Joint(location))
+        self.locations.push(new Locale(location))
       }
     });
+
+    self.filterMarkers();
   };
 
+  // Get marker by title
+  this.getMarker = function(title) {
+    var foundMarker;
+    markers.forEach(function(marker) {
+      if (marker.title === title) {
+        foundMarker = marker;
+      }
+    });
+    return foundMarker;
+  };
+
+  // Click handler, closes infowindow and centers map
+  this.handleClick = function(data) {
+    var marker = self.getMarker(data.title());
+    populateInfoWindow(marker, largeInfowindow);
+    // largeInfowindow.close();
+    // self.map.setCenter(new google.maps.LatLng(data.location.lat, data.location.lng));
+    // self.map.setZoom(12);
+  };
+
+  // initially show all the locations
   initialLocations.forEach(function(location) {
-    self.locations.push(new Joint(location));
+    self.locations.push(new Locale(location));
   });
-};
 
-var map;
-
-// Create a new blank array for all the listing markers.
-var markers = [];
-
-function initMap() {
   // Constructor creates a new map - only center and zoom are required.
-  map = new google.maps.Map(document.getElementById('map'), {
+  this.map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 47.652042, lng: -122.3646713},
     zoom: 13,
     mapTypeControl: false
   });
 
-  var largeInfowindow = new google.maps.InfoWindow();
-
-  // The following group uses the location array to create an array of markers on initialize.
+  // Create an array of markers
   for (var i = 0; i < initialLocations.length; i++) {
     // Get the position from the location array.
     var position = initialLocations[i].location;
     var title = initialLocations[i].title;
     var foursquareId = initialLocations[i].foursquareId;
+
     // Create a marker per location, and put into markers array.
     var marker = new google.maps.Marker({
       position: position,
@@ -69,8 +107,10 @@ function initMap() {
       id: i,
       foursquareId: foursquareId
     });
+
     // Push the marker to our array of markers.
     markers.push(marker);
+
     // Create an onclick event to open the large infowindow at each marker.
     marker.addListener('click', function() {
       populateInfoWindow(this, largeInfowindow);
@@ -80,17 +120,16 @@ function initMap() {
   // Show all markers by default
   var bounds = new google.maps.LatLngBounds();
   for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(map);
+    markers[i].setMap(self.map);
     bounds.extend(markers[i].position);
   }
+
   // Extend the boundaries of the map for each marker and display the marker
-  map.fitBounds(bounds);
+  self.map.fitBounds(bounds);
 
-}
+};
 
-// This function populates the infowindow when the marker is clicked. We'll only allow
-// one infowindow which will open at the marker that is clicked, and populate based
-// on that markers position.
+// Populates infowindow when clicked
 function populateInfoWindow(marker, infowindow) {
   // Foursquare API deets
   var clientId = '114EPTUAI3MLHVF24X4M2I3E5CUFL0UFONDKFCDOB410OPEI';
@@ -129,40 +168,15 @@ function populateInfoWindow(marker, infowindow) {
       infowindow.setContent(htmlContent);
 
       // Open the infowindow on the correct marker.
-      infowindow.open(map, marker);
+      infowindow.open(self.map, marker);
     }).fail(function() {
       infowindow.setContent('<div class="title">' + marker.title + '</div><div class="text">No Street View Found</div>');
 
       // Open the infowindow on the correct marker.
-      infowindow.open(map, marker);
+      infowindow.open(self.map, marker);
     });
   }
 }
 
-// Loops through the markers and filters them based on user search
-function filterMarkers() {
-  var searchText = document.querySelector('#filter-text').value.toLowerCase();
-  var filtered = markers.filter(function(marker) {
-    return marker.title.toLowerCase().includes(searchText);
-  });
-
-  clearMarkers();
-  filtered.forEach(function(marker) {
-    marker.setMap(map);
-  });
-}
-
-// Clear all markers from the map
-function clearMarkers() {
-  markers.forEach(function(marker) {
-    marker.setMap(null);
-  });
-}
-
-// Begin app by initializing knockout and google map
+// Begin app by initializing knockout
 ko.applyBindings(new ViewModel());
-initMap();
-
-// Event handlers
-$('#filter-text').keyup(filterMarkers);
-$('#filter-button').click(filterMarkers);
