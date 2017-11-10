@@ -1,13 +1,13 @@
 // These are the pizza locations the app initializes with
 var initialLocations = [
-  {title: 'Big Mario\'s Pizza', location: {lat: 47.6601293, lng: -122.3655865}, yelpId: 'big-marios-pizza-seattle-6'},
-  {title: 'Frēlard Pizza Company', location: {lat: 47.6537991, lng: -122.3597635}, yelpId: 'frelard-pizza-company-seattle'},
-  {title: 'Chinapie', location: {lat: 47.6523581, lng: -122.356624}, yelpId: 'chinapie-seattle-3'},
-  {title: 'Via Tribunali', location: {lat: 47.6588171, lng: -122.3500846}, yelpId: 'via-tribunali-seattle-6'},
-  {title: 'Ballard Pizza Company', location: {lat: 47.6612894, lng: -122.3306091}, yelpId: 'ballard-pizza-company-seattle'},
-  {title: 'Pagliacci Pizza', location: {lat: 47.6539202, lng: -122.3437461}, yelpId: 'pagliacci-pizza-seattle-3'},
-  {title: 'Zeeks Pizza', location: {lat: 47.648321, lng: -122.3559744}, yelpId: 'zeeks-pizza-seattle'},
-  {title: 'Ballroom', location: {lat: 47.6516998, lng: -122.3532554}, yelpId: 'the-ballroom-seattle'}
+  {title: 'Purple Cafe & Wine Bar', location: {lat: 47.6140101, lng: -122.1988555}, foursquareId: '4aad43e3f964a5205a5f20e3'},
+  {title: 'Bellevue Brewing Company', location: {lat: 47.6265565, lng: -122.1661568}, foursquareId: '4ffb0b30e4b0b8fdabb4a1af'},
+  {title: 'Black Bottle Postern', location: {lat: 47.6186143, lng: -122.2018311}, foursquareId: '4d5755821270236a8aaf8859'},
+  {title: 'Geaux Brewing', location: {lat: 47.6303201, lng: -122.1795937}, foursquareId: '51915f16011cc2fb720bdd6e'},
+  {title: 'The Pumphouse Bar & Grill', location: {lat: 47.6177487, lng: -122.1830852}, foursquareId: '4a83909cf964a52070fb1fe3'},
+  {title: 'Sideline Sports Bar', location: {lat: 47.5773441, lng: -122.1687762}, foursquareId: '41117880f964a520de0b1fe3'},
+  {title: 'Monsoon East', location: {lat: 47.6101889, lng: -122.2031894}, foursquareId: '4a8dcfe5f964a520f41020e3'},
+  {title: 'Bin On The Lake', location: {lat: 47.6569991, lng: -122.2074092}, foursquareId: '4ba41c13f964a5207c8238e3'}
 ];
 
 var Joint = function(data) {
@@ -60,12 +60,14 @@ function initMap() {
     // Get the position from the location array.
     var position = initialLocations[i].location;
     var title = initialLocations[i].title;
+    var foursquareId = initialLocations[i].foursquareId;
     // Create a marker per location, and put into markers array.
     var marker = new google.maps.Marker({
       position: position,
       title: title,
       animation: google.maps.Animation.DROP,
-      id: i
+      id: i,
+      foursquareId: foursquareId
     });
     // Push the marker to our array of markers.
     markers.push(marker);
@@ -90,6 +92,11 @@ function initMap() {
 // one infowindow which will open at the marker that is clicked, and populate based
 // on that markers position.
 function populateInfoWindow(marker, infowindow) {
+  // Foursquare API deets
+  var clientId = '114EPTUAI3MLHVF24X4M2I3E5CUFL0UFONDKFCDOB410OPEI';
+  var clientSecret = 'RRNXSXF4Q5HOJQXKLTIAHYP25KPL3A5TBIHDSIGEXYXVK3GM';
+  var foursquareId = marker.foursquareId;
+
   // Check to make sure the infowindow is not already opened on this marker.
   if (infowindow.marker != marker) {
     // Clear the infowindow content to give the streetview time to load.
@@ -99,39 +106,36 @@ function populateInfoWindow(marker, infowindow) {
     infowindow.addListener('closeclick', function() {
       infowindow.marker = null;
     });
-    var streetViewService = new google.maps.StreetViewService();
-    var radius = 50;
 
-    // In case the status is OK, which means the pano was found, compute the
-    // position of the streetview image, then calculate the heading, then get a
-    // panorama from that and set the options
-    function getStreetView(data, status) {
-      if (status == google.maps.StreetViewStatus.OK) {
-        var nearStreetViewLocation = data.location.latLng;
-        var heading = google.maps.geometry.spherical.computeHeading(
-          nearStreetViewLocation, marker.position);
-          infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
-          var panoramaOptions = {
-            position: nearStreetViewLocation,
-            pov: {
-              heading: heading,
-              pitch: 30
-            }
-          };
-        var panorama = new google.maps.StreetViewPanorama(
-          document.getElementById('pano'), panoramaOptions);
-      } else {
-        infowindow.setContent('<div>' + marker.title + '</div>' +
-          '<div>No Street View Found</div>');
+    var url = `https://api.foursquare.com/v2/venues/${foursquareId}?v=20171101&client_id=${clientId}&client_secret=${clientSecret}`;
+    $.getJSON(url).done(function(data) {
+      var bestPhoto = data.response.venue.bestPhoto;
+      var description = data.response.venue.description
+      var phoneNumber = data.response.venue.contact.formattedPhone;
+      var imgSrc = bestPhoto.prefix + '200x200' + bestPhoto.suffix;
+
+      console.log(data);
+      var htmlContent = '<div class="title">' + marker.title + '</div>';
+
+      if (description) {
+        htmlContent += `<div class="text">${description}</div>`;
       }
-    }
 
-    // Use streetview service to get the closest streetview image within
-    // 50 meters of the markers position
-    streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+      if (phoneNumber) {
+        htmlContent += `<div class="text">Contact: ${phoneNumber}</div>`
+      }
 
-    // Open the infowindow on the correct marker.
-    infowindow.open(map, marker);
+      htmlContent += '<img class="image" src="' + imgSrc + '"} />';
+      infowindow.setContent(htmlContent);
+
+      // Open the infowindow on the correct marker.
+      infowindow.open(map, marker);
+    }).fail(function() {
+      infowindow.setContent('<div class="title">' + marker.title + '</div><div class="text">No Street View Found</div>');
+
+      // Open the infowindow on the correct marker.
+      infowindow.open(map, marker);
+    });
   }
 }
 
@@ -162,24 +166,3 @@ initMap();
 // Event handlers
 $('#filter-text').keyup(filterMarkers);
 $('#filter-button').click(filterMarkers);
-
-// https://api.foursquare.com/v2/venues/${foursquareId}?v=20171101&client_id=${clientId}&client_secret=${clientSecret}
-
-var foursquareId = '4aad43e3f964a5205a5f20e3';
-var clientId = '114EPTUAI3MLHVF24X4M2I3E5CUFL0UFONDKFCDOB410OPEI';
-var clientSecret = 'RRNXSXF4Q5HOJQXKLTIAHYP25KPL3A5TBIHDSIGEXYXVK3GM';
-
-$.ajax({
-
-  url: `https://api.yelp.com/v3/businesses/${foursquareId}`,
-  type: 'GET',
-  headers: {'Authorization': 'Bearer Mb84WblpHpm47Sa2Vwh5fqS6GlrYz69ZTKEhxrtOuQRdNwLGFgRen1Fa4pq8hS5tr9GKTpLSwns9ONYqzpqnnxNAmZ4MIhlbG-gBA7EI-j50FmzKTJP08timIr4EWnYx'},
-  jsonpCallback: 'cb',
-  cache: true,
-  success: function(data) {
-    console.log('SUCCESS');
-  }
-$.getJSON('https://api.foursquare.com/v2/venues/search?v=20171101&ll=41.878114%2C%20-87.629798&query=coffee&intent=checkin&client_id=114EPTUAI3MLHVF24X4M2I3E5CUFL0UFONDKFCDOB410OPEI&client_secret=RRNXSXF4Q5HOJQXKLTIAHYP25KPL3A5TBIHDSIGEXYXVK3GM').done((data) => console.log(data));
-  // Fetch the stored token from localStorage and set in the header
-  // headers: {"Authorization": localStorage.getItem('token')}
-});
