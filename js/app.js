@@ -180,3 +180,20 @@ function populateInfoWindow(marker, infowindow) {
 
 // Begin app by initializing knockout
 ko.applyBindings(new ViewModel());
+
+// Event handler for hamburger menu
+$('#hamburger').click(function() {
+  $optionsBox = $('.options-box');
+
+  $optionsBox.toggle();
+  $optionsBox.toggleClass('hidden');
+
+  if ($optionsBox.hasClass('hidden')) {
+    $('#hamburger').css('left', '10px');
+    $('#map').css('width', '100%');
+  } else {
+    $('#hamburger').css('left', '36%');
+    $('#map').css('width', '65%');
+  }
+
+});
