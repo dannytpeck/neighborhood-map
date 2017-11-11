@@ -18,8 +18,8 @@
 
         <hr>
 
-        <div class="locations" data-bind="foreach: locations">
-          <ul>
+        <div class="locations">
+          <ul data-bind="foreach: locations">
             <li data-bind="text: title, click: $root.handleClick"></li>
           </ul>
         </div>
