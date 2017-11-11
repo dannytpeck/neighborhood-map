@@ -191,6 +191,7 @@ function populateInfoWindow(marker, infowindow) {
       }
 
       htmlContent += '<img class="image" src="' + imgSrc + '"} />';
+      htmlContent += '<div class="text">Data collected from Foursquare</div>';
       infowindow.setContent(htmlContent);
 
       // Open the infowindow on the correct marker.
