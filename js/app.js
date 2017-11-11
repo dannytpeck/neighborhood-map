@@ -39,7 +39,7 @@ var ViewModel = function() {
 
     // Display markers based on filter
     filtered.forEach(function(marker) {
-      marker.setMap(map);
+      marker.setMap(self.map);
     });
   };
 
