@@ -80,6 +80,16 @@ var ViewModel = function() {
     // self.map.setZoom(12);
   };
 
+  // Change icon colors when user hovers over items in left nav menu
+  this.handleMouseOver = function(data) {
+    var marker = self.getMarker(data.title());
+    marker.setIcon(highlightedIcon);
+  }
+  this.handleMouseOut = function(data) {
+    var marker = self.getMarker(data.title());
+    marker.setIcon(defaultIcon);
+  }
+
   // initially show all the locations
   initialLocations.forEach(function(location) {
     self.locations.push(new Locale(location));
@@ -91,6 +101,13 @@ var ViewModel = function() {
     zoom: 13,
     mapTypeControl: false
   });
+
+  // Style the markers a bit. This will be our listing marker icon.
+  var defaultIcon = makeMarkerIcon('f7544c');
+
+  // Create a "highlighted location" marker color for when the user
+  // mouses over the marker.
+  var highlightedIcon = makeMarkerIcon('65ff6a');
 
   // Create an array of markers
   for (var i = 0; i < initialLocations.length; i++) {
@@ -104,6 +121,7 @@ var ViewModel = function() {
       position: position,
       title: title,
       animation: google.maps.Animation.DROP,
+      icon: defaultIcon,
       id: i,
       foursquareId: foursquareId
     });
@@ -114,6 +132,14 @@ var ViewModel = function() {
     // Create an onclick event to open the large infowindow at each marker.
     marker.addListener('click', function() {
       populateInfoWindow(this, largeInfowindow);
+    });
+    // Two event listeners - one for mouseover, one for mouseout,
+    // to change the colors back and forth.
+    marker.addListener('mouseover', function() {
+      this.setIcon(highlightedIcon);
+    });
+    marker.addListener('mouseout', function() {
+      this.setIcon(defaultIcon);
     });
   }
 
@@ -177,6 +203,19 @@ function populateInfoWindow(marker, infowindow) {
     });
   }
 }
+
+// Takes in a color to make a marker icon
+function makeMarkerIcon(markerColor) {
+  var markerImage = new google.maps.MarkerImage(
+    'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
+    '|40|_|%E2%80%A2',
+    new google.maps.Size(21, 34),
+    new google.maps.Point(0, 0),
+    new google.maps.Point(10, 34),
+    new google.maps.Size(21,34));
+  return markerImage;
+}
+
 
 // Begin app by initializing knockout
 ko.applyBindings(new ViewModel());

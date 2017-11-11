@@ -21,7 +21,7 @@
 
         <div class="locations">
           <ul data-bind="foreach: locations">
-            <li data-bind="text: title, click: $root.handleClick"></li>
+            <li data-bind="text: title, click: $root.handleClick, event: { mouseover: $root.handleMouseOver, mouseout: $root.handleMouseOut }"></li>
           </ul>
         </div>
 
