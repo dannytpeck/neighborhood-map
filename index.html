@@ -7,22 +7,23 @@
     <link rel="stylesheet" href="css/main.css">
   </head>
   <body>
+    <div id="error">The Google Maps API which this app requires to function is not loading. Reload the page to try again.</div>
     <div class="container">
 
       <div class="options-box">
         <h1>Find Nightlife!</h1>
 
         <div>
-          <input id="filter-text" type="text" placeholder="Enter text and hit the Filter button" data-bind="event: { keyup: filterLocations }">
-          <input id="filter-button" type="button" value="Filter" data-bind="click: filterLocations">
+          <input id="filter-text" type="text" placeholder="Filter by name" data-bind="textInput: searchText">
         </div>
 
         <hr>
 
         <div class="locations">
-          <ul data-bind="foreach: locations">
-            <li data-bind="text: title, click: $root.handleClick, event: { mouseover: $root.handleMouseOver, mouseout: $root.handleMouseOut }"></li>
+          <ul data-bind="foreach: filteredLocations">
+            <li data-bind="text: title, click: $root.selectLocation"></li>
           </ul>
+          <p data-bind="visible: filteredLocations().length === 0">No Locations Found</p>
         </div>
 
       </div>
@@ -35,7 +36,8 @@
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing&key=AIzaSyCQrY4cxZFSshSuk2cK3ZZFvBg5_0n_vhM&v=3"></script>
     <script src="js/app.js"></script>
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing&key=AIzaSyCQrY4cxZFSshSuk2cK3ZZFvBg5_0n_vhM&v=3&callback=initApp" onerror="googleError()"></script>
   </body>
 </html>

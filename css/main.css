@@ -81,15 +81,15 @@ hr {
 }
 
 #filter-text {
-  width: 66%;
-}
-
-#filter-button {
-  width: 30%;
+  width: 95%;
 }
 
 #hamburger {
   position: absolute;
   top: .5em;
   left: 36%;
+}
+
+#error {
+  display: none;
 }
