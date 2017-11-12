@@ -71,8 +71,10 @@ var ViewModel = function() {
   this.filteredLocations = ko.computed(function() {
     return self.locations().filter(function(location) {
       var visibility = true;
+      var searchText = self.searchText().toLowerCase();
+
       if (self.searchText()) {
-        if (location.title().toLowerCase().includes(self.searchText())) {
+        if (location.title().toLowerCase().includes(searchText)) {
           visibility = true;
         } else {
           visibility = false;
