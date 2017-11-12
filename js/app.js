@@ -1,4 +1,4 @@
-// These are the pizza locations the app initializes with
+// These are the locations the app initializes with
 var initialLocations = [
   {title: 'Purple Cafe & Wine Bar', location: {lat: 47.6140101, lng: -122.1988555}, foursquareId: '4aad43e3f964a5205a5f20e3'},
   {title: 'Bellevue Brewing Company', location: {lat: 47.6265565, lng: -122.1661568}, foursquareId: '4ffb0b30e4b0b8fdabb4a1af'},
@@ -164,7 +164,7 @@ function populateInfoWindow(marker, infowindow) {
 
   // Check to make sure the infowindow is not already opened on this marker.
   if (infowindow.marker != marker) {
-    // Clear the infowindow content to give the streetview time to load.
+    // Clear the infowindow content
     infowindow.setContent('');
     infowindow.marker = marker;
     // Make sure the marker property is cleared if the infowindow is closed.
@@ -197,7 +197,7 @@ function populateInfoWindow(marker, infowindow) {
       // Open the infowindow on the correct marker.
       infowindow.open(self.map, marker);
     }).fail(function() {
-      infowindow.setContent('<div class="title">' + marker.title + '</div><div class="text">No Street View Found</div>');
+      infowindow.setContent('<div class="title">' + marker.title + '</div><div class="text">No Foursquare Data Found</div>');
 
       // Open the infowindow on the correct marker.
       infowindow.open(self.map, marker);
